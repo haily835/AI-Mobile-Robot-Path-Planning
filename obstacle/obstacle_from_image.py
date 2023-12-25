@@ -5,6 +5,14 @@ from matplotlib.patches import Rectangle
 
 class Map:
     def __init__(self, image_path, grid_size, padding_size):
+        """
+        Initialize the ImageGrid object with the specified image, grid size, and padding size.
+
+        Parameters:
+        - image_path (str): The path to the black-and-white image file.
+        - grid_size (int): The size of each grid cell in pixels.
+        - padding_size (int): The size of padding between grid cells in pixels.
+        """
         # Load the black-and-white image
         self.image = plt.imread(image_path)
         self.flipped_image = np.flipud(self.image)
@@ -30,6 +38,10 @@ class Map:
         Returns:
         - True if the grid contains a black portion (obstacle), False otherwise.
         """
+        # Check whether the current node lies within the map
+        if row >= self.rows or col >= self.cols:
+            return False
+        
         # Iterate over the surrounding grids with padding
         for i in range(-self.padding_size, self.padding_size + 1):
             for j in range(-self.padding_size, self.padding_size + 1):
@@ -47,6 +59,7 @@ class Map:
                         return True  # If any surrounding grid contains an obstacle, consider the main grid as obstacle
 
         return False  # If none of the surrounding grids contains an obstacle, consider the main grid as obstacle
+    
     def visualize_coordinate_system(self):
         """
         Visualize the coordinate system with labeled axes, mesh grid, obstacles, and arrows.
@@ -83,10 +96,12 @@ class Map:
         ax.arrow(0, self.rows * self.grid_size, 0, 0.5 * self.grid_size, head_width=0.2, head_length=0.2, fc='blue', ec='blue')
 
         # Draw axis ticks and labels
-        ax.set_xticks(np.arange(0, (self.cols + 1) * self.grid_size, self.grid_size))
-        ax.set_yticks(np.arange(0, (self.rows + 1) * self.grid_size, self.grid_size))
-        ax.set_xticklabels(np.arange(0, self.cols + 1))
-        ax.set_yticklabels(np.arange(0, self.rows + 1))
+
+        if self.cols < 20 and self.row < 20:
+            ax.set_xticks(np.arange(0, (self.cols + 1) * self.grid_size, self.grid_size))
+            ax.set_yticks(np.arange(0, (self.rows + 1) * self.grid_size, self.grid_size))
+            ax.set_xticklabels(np.arange(0, self.cols + 1))
+            ax.set_yticklabels(np.arange(0, self.rows + 1))
 
         # Set axis labels
         ax.set_xlabel("X")
@@ -97,14 +112,4 @@ class Map:
 
         plt.show()
 
-if __name__ == "main":
-    # Example usage:
-    image_path = "./images/final_path.png"
-    grid_size = 25
-    padding_size = 2  # Set the desired padding size
 
-    # Create a Map instance
-    my_map = Map(image_path, grid_size, padding_size)
-
-    # Visualize the coordinate system with labeled axes, mesh grid, obstacles, and arrows
-    my_map.visualize_coordinate_system()
