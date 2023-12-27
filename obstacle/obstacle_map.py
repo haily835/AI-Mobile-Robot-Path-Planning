@@ -101,8 +101,8 @@ class Map:
         if self.y_lim < 40 and self.x_lim < 40:
             ax.set_xticks(np.arange(0, (self.x_lim + 1) * self.grid_size, self.grid_size))
             ax.set_yticks(np.arange(0, (self.y_lim + 1) * self.grid_size, self.grid_size))
-            ax.set_xticklabels(np.arange(0, self.x_lim + 1), fontsize=8)
-            ax.set_yticklabels(np.arange(0, self.y_lim + 1), fontsize=8)
+            ax.set_xticklabels(np.arange(0, self.x_lim + 1), fontsize=5)
+            ax.set_yticklabels(np.arange(0, self.y_lim + 1), fontsize=5)
         else:
             ax.set_xticks([0, self.x_lim * self.grid_size])
             ax.set_yticks([0, self.y_lim * self.grid_size])
