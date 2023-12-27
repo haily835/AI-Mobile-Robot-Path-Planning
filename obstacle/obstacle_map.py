@@ -92,16 +92,13 @@ class Map:
         ax.axvline(0, color="blue", linewidth=2)
         ax.imshow(self.image, origin="upper")
         
-        height, width = self.image.shape[:2]
-        rect = Rectangle((0, 0), width, height, linewidth=2, edgecolor='pink', facecolor='none')
-        ax.add_patch(rect)
 
         # Draw arrows on x and y axes
         # ax.arrow(self.cols * self.grid_size, 0, 0.5 * self.grid_size, 0, head_width=0.2, head_length=0.2, fc='blue', ec='blue')
         # ax.arrow(0, self.rows * self.grid_size, 0, 0.5 * self.grid_size, head_width=0.2, head_length=0.2, fc='blue', ec='blue')
 
         # Draw axis ticks and labels
-        if self.y_lim < 30 and self.x_lim < 30:
+        if self.y_lim < 40 and self.x_lim < 40:
             ax.set_xticks(np.arange(0, (self.x_lim + 1) * self.grid_size, self.grid_size))
             ax.set_yticks(np.arange(0, (self.y_lim + 1) * self.grid_size, self.grid_size))
             ax.set_xticklabels(np.arange(0, self.x_lim + 1))
@@ -149,19 +146,14 @@ class Map:
         fig, ax = plt.subplots()
         self.draw_grid(ax)
         
-        # Draw path
-        
+        # Draw reached states
         for r in reached:
             self.draw_rect(ax, r, edgecolor='#D9D9D9', facecolor='#D9D9D9')
         
-        # for s in states:
-        #     self.draw_rect(ax, s, edgecolor='blue', facecolor='green', plot_center_point=True)
-        
-        self.plot_center_points(ax, states )
+        self.plot_center_points(ax, states)
         self.draw_rect(ax, initial, edgecolor='green', facecolor='green')
         self.draw_rect(ax, goal, edgecolor='orange', facecolor='orange')
 
-        
         plt.show()
 
 
