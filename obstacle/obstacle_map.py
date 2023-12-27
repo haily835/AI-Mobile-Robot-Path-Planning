@@ -19,15 +19,16 @@ class Map:
         self.grid_size = grid_size
 
         # Calculate the number of rows and columns in the grid
-        self.rows = math.ceil(self.image.shape[0] / self.grid_size)
-        self.cols = math.ceil(self.image.shape[1] / self.grid_size)
+        self.y_lim = math.ceil(self.image.shape[0] / self.grid_size)
+        self.x_lim = math.ceil(self.image.shape[1] / self.grid_size)
         self.obstacles = []
-        for row in range(self.rows):
-            for col in range(self.cols):
-                if self.is_obstacle_in_grid(row, col):
-                    self.obstacles.append((row,col))
+        
+        for y in range(self.y_lim):
+            for x in range(self.x_lim):
+                if self.is_obstacle_in_grid(x, y):
+                    self.obstacles.append((x, y))
 
-    def is_obstacle_in_grid(self, y, x):
+    def is_obstacle_in_grid(self, x, y):
         """
         Check whether a small grid at the specified row and column contains a black portion.
 
@@ -39,7 +40,7 @@ class Map:
         - True if the grid contains a black portion (obstacle), False otherwise.
         """
         # Check whether the current node lies within the map
-        if y > (self.rows - 1) or x > (self.cols - 1): return True
+        if y > (self.y_lim - 1) or x > (self.x_lim - 1): return True
         if y < 0 or x < 0: return True
         grid_size = self.grid_size
         
@@ -52,10 +53,11 @@ class Map:
         return False  # If none of the surrounding grids contains an obstacle, consider the main grid as obstacle
     
     def draw_rect(self, ax, coords, edgecolor='r', facecolor='none', plot_center_point=False):
-        row, col = coords
+        
+        x, y = coords
 
         # Calculate the coordinates of the rectangle
-        rect_coords = (col * self.grid_size, row * self.grid_size)
+        rect_coords = (x * self.grid_size, y * self.grid_size)
 
         # Create and add the rectangle patch
         rect = Rectangle(rect_coords, self.grid_size, self.grid_size,
@@ -72,11 +74,11 @@ class Map:
 
     def draw_grid(self, ax):
         # Draw mesh grid
-        for i in range(1, self.cols):
+        for i in range(1, self.x_lim):
             x = i * self.grid_size
             ax.axvline(x, color="#E5E4E2", linestyle="--", linewidth=0.5)
 
-        for i in range(1, self.rows):
+        for i in range(1, self.y_lim):
             y = i * self.grid_size
             ax.axhline(y, color="#E5E4E2", linestyle="--", linewidth=0.5)
 
@@ -99,16 +101,16 @@ class Map:
         # ax.arrow(0, self.rows * self.grid_size, 0, 0.5 * self.grid_size, head_width=0.2, head_length=0.2, fc='blue', ec='blue')
 
         # Draw axis ticks and labels
-        if self.cols < 30 and self.rows < 30:
-            ax.set_xticks(np.arange(0, (self.cols + 1) * self.grid_size, self.grid_size))
-            ax.set_yticks(np.arange(0, (self.rows + 1) * self.grid_size, self.grid_size))
-            ax.set_xticklabels(np.arange(0, self.cols + 1))
-            ax.set_yticklabels(np.arange(0, self.rows + 1))
+        if self.y_lim < 30 and self.x_lim < 30:
+            ax.set_xticks(np.arange(0, (self.x_lim + 1) * self.grid_size, self.grid_size))
+            ax.set_yticks(np.arange(0, (self.y_lim + 1) * self.grid_size, self.grid_size))
+            ax.set_xticklabels(np.arange(0, self.x_lim + 1))
+            ax.set_yticklabels(np.arange(0, self.y_lim + 1))
         else:
-            ax.set_xticks([0, self.cols * self.grid_size])
-            ax.set_yticks([0, self.rows * self.grid_size])
-            ax.set_xticklabels([0, self.cols])
-            ax.set_yticklabels([0, self.rows])
+            ax.set_xticks([0, self.x_lim * self.grid_size])
+            ax.set_yticks([0, self.y_lim * self.grid_size])
+            ax.set_xticklabels([0, self.x_lim])
+            ax.set_yticklabels([0, self.y_lim])
 
         # Set axis labels
         ax.set_xlabel("X")
@@ -130,8 +132,8 @@ class Map:
         center_points = []
 
         for coords in rectangle_coords_list:
-            row, col = coords
-            center_coords = (col * self.grid_size + 0.5 * self.grid_size, row * self.grid_size + 0.5 * self.grid_size)
+            x, y = coords
+            center_coords = (x * self.grid_size + 0.5 * self.grid_size, y * self.grid_size + 0.5 * self.grid_size)
             center_points.append(center_coords)
         
         # Connect the center points with lines

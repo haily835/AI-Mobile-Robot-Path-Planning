@@ -121,7 +121,7 @@ def astar_search(problem, h=None):
     h = h or problem.h
     return best_first_search(problem, f=lambda n: g(n) + h(n))
 
-def weighted_astar_search(problem, h=None):
+def dynamic_weighted_astar_search(problem, h=None):
     """Search nodes with minimum f(n) = g(n) + weight * h(n)."""
     h = h or problem.h
     d = sqrt((problem.goal[0] - problem.initial[0])**2 + (problem.goal[1] - problem.initial[1])**2)
