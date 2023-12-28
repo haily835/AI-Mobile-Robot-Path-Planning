@@ -90,7 +90,7 @@ class Map:
         # Draw x and y axes
         ax.axhline(0, color="blue", linewidth=2)
         ax.axvline(0, color="blue", linewidth=2)
-        ax.imshow(self.image, origin="upper")
+        ax.imshow(self.image, origin="upper", cmap='gray')
         
 
         # Draw arrows on x and y axes

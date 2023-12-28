@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 from typing import Optional
 from obstacle.obstacle_map import Map
+from obstacle.random_map import generate_image
 from a_star.explorer import Explorer
 from a_star.search import astar_search, path_states, dynamic_weighted_astar_search
 from path_smooth.path_smooth import simplify_path
@@ -82,9 +83,14 @@ class MainWindow(QWidget):
         # Image Form
         self.image_button = QPushButton('Select Image')
         self.image_button.clicked.connect(self.selectImage)
+        self.random_image_button = QPushButton('Generate Random Map')
+        self.random_image_button.clicked.connect(self.generateImage)
+
         self.image_label = QLabel('Image:')
-        layout.addRow(self.image_button)
+        layout.addRow(self.image_button, self.random_image_button)
         layout.addRow(self.image_label)
+        
+        
         # Grid size
         self.grid_size_spinbox = QSpinBox()
         self.grid_size_spinbox.setValue(40)
@@ -99,14 +105,18 @@ class MainWindow(QWidget):
         # Start Position Form
         self.start_x_edit = QSpinBox()
         self.start_y_edit = QSpinBox()
-        layout.addRow(QLabel('Start Position (x, y):'))
-        layout.addRow(self.start_x_edit, self.start_y_edit)
-
+        startBox = QHBoxLayout()
+        startBox.addWidget(self.start_x_edit)
+        startBox.addWidget(self.start_y_edit)
+        layout.addRow(QLabel('Start Position (x, y):'), startBox)
+        
         # Goal Position Form
         self.end_x_edit = QSpinBox()
         self.end_y_edit = QSpinBox()
-        layout.addRow(QLabel('Goal Position (x, y):'))
-        layout.addRow(self.end_x_edit, self.end_y_edit)
+        endBox = QHBoxLayout()
+        endBox.addWidget(self.end_x_edit)
+        endBox.addWidget(self.end_y_edit)
+        layout.addRow(QLabel('Goal Position (x, y):'), endBox)
 
         # Show Start Goal Button
         self.show_sg_button = QPushButton('Show Start Goal Point')
@@ -156,6 +166,10 @@ class MainWindow(QWidget):
             self.image_label.setText(fileName)
             # Add logic to handle the selected image
             # self.matplotlib_widget.plotImage(fileName)
+
+    def generateImage(self):
+        fileName = generate_image()
+        self.image_label.setText(fileName)
 
     def plotImage(self):
         # Add logic to plot the image using MatplotlibWidget
