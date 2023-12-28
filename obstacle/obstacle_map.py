@@ -117,13 +117,17 @@ class Map:
         ax.grid(True, linestyle='--', linewidth=0.5)
     
 
-    def draw_coordinate_system(self):
+    def draw_coordinate_system(self, fig=None, ax=None):
         """
         Visualize the coordinate system with labeled axes, mesh grid, obstacles, and arrows.
         """
-        fig, ax = plt.subplots()
-        self.draw_grid(ax)
-        plt.show()
+        if fig and ax:
+            self.draw_grid(ax)
+        else:
+            fig, ax = plt.subplots()
+            self.draw_grid(ax)
+            plt.show()
+        
 
     def plot_center_points(self, ax, rectangle_coords_list):
         center_points = []
@@ -139,12 +143,13 @@ class Map:
                     [center_points[i][1], center_points[i + 1][1]], color='blue', linestyle='-', linewidth=2)
                 
                 
-    def draw_path_found(self, states, initial, goal, reached = []):
+    def draw_path_found(self, states, initial, goal, reached = [], fig=None, ax=None):
         """
         Visualize the coordinate system with labeled axes, mesh grid, obstacles, and arrows.
         """
-        fig, ax = plt.subplots()
-        self.draw_grid(ax)
+        if not (fig or ax):
+            fig, ax = plt.subplots()
+            self.draw_grid(ax)
         
         # Draw reached states
         for r in reached:
@@ -154,7 +159,7 @@ class Map:
         self.draw_rect(ax, initial, edgecolor='green', facecolor='green')
         self.draw_rect(ax, goal, edgecolor='orange', facecolor='orange')
 
-        plt.show()
+        if not (fig or ax): plt.show()
 
 
     
