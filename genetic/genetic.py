@@ -5,7 +5,6 @@ from deletion import deletion
 from cal_path_value import cal_path_value
 from cal_smooth_value import cal_smooth_value
 from mutation import mutation
-from distance import distance
 import numpy as np
 from grid_number_to_xy import grid_number_to_xy
 import matplotlib.pyplot as plt
@@ -98,30 +97,3 @@ if __name__ == '__main__':
 
     path = genetic(G, [0,0], [9,9])
     plot_path(G, path)
-# Define the path coordinates
-# print(min_path)
-# print(min_path[-1])
-
-
-# def plot_smoth():
-#     before = [ 0,  1,  2 ,13, 45, 67, 89 ,99]
-#     after = [ 0  ,1, 13, 45, 67 ,89 ,99]
-    
-#     # Create a heatmap plot with 1 as white and 0 as black
-#     plt.imshow(G, cmap='gray_r', interpolation='nearest', vmin=0, vmax=1)
-
-#     # Plot the path on top of the heatmap
-#     path_coordinates = [grid_number_to_xy(grid,n) for grid in before]
-#     path_x, path_y = zip(*path_coordinates)
-#     plt.plot(path_y, path_x, color='blue', marker='o')
-
-#     path_coordinates = [grid_number_to_xy(grid,n) for grid in after]
-#     path_x, path_y = zip(*path_coordinates)
-#     plt.plot(path_y, path_x, color='red', marker='o')
-
-#     plt.title('Visualization of 10x10 Matrix with Path')
-#     plt.show()
-
-
-
-# plot_final()

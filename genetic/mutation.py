@@ -1,5 +1,4 @@
 import numpy as np
-from contiuous_path import generate_continuous_path
 from grid_number_to_xy import grid_number_to_xy
 import random
 
