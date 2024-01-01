@@ -1,4 +1,7 @@
 import numpy as np
+import random
+# Set a seed for reproducibility
+random.seed(42)
 
 def selection(new_population, fit_value):
     ## Calculate total fitness value and normalize fitness values
@@ -11,7 +14,9 @@ def selection(new_population, fit_value):
     cum_normal_fit_value = np.cumsum(normal_fit_value)
     
     # Generate sorted random values
-    random_values = np.sort(np.random.rand(len(new_population)))
+    random_values = [random.random() for _ in range(len(new_population))]
+    random_values = sorted(random_values)
+
     
     # Initialize the new population list
     new_population_selected = []

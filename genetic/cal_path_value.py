@@ -1,5 +1,5 @@
 import numpy as np
-from distance import distance
+from .distance import distance
 
 def cal_path_value(new_population, grid_size):
     # Get the number of populations in the new_population list
@@ -7,7 +7,6 @@ def cal_path_value(new_population, grid_size):
     
     # Initialize an array to store path values for each population
     path_value = np.zeros(n)
-
 
     # Iterate over each population in new_population
     for i in range(n):

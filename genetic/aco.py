@@ -1,7 +1,12 @@
 import numpy as np
-from distance import distance
+from .distance import distance
 import numpy as np
-from grid_number_to_xy import grid_number_to_xy
+from .grid_number_to_yx import grid_number_to_yx
+import random
+import numpy as np
+
+# Set a seed for reproducibility
+random.seed(42)
 
 G = np.array([
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -20,7 +25,7 @@ def calc_distance_matrix(G, end_coord):
     # Initialize the distance matrix D
     rows, cols = G.shape[0], G.shape[1]
     D = np.zeros((rows, cols))
-    end_r, end_c = end_coord
+    end_c, end_r = end_coord
     # Calculate distances for each pair of points
     for i in range(rows):
         for j in range(cols):
@@ -63,7 +68,7 @@ def calc_movement_matrix(G):
             D_move[i].append('')
 
     for point in range(rows * cols):
-        r, c = grid_number_to_xy(point, cols)
+        r, c = grid_number_to_yx(point, cols)
         if G[r, c] == 0:
             actions = [(-1, -1), (-1, 0), (-1, 1),
                         (0, -1),           (0, 1),
@@ -103,8 +108,8 @@ def aco(G, start, end, m, NC_max, Alpha=2, Beta=6, Rho=0.1, Q=1, min_PL_NC_ant=f
     rows, cols = G.shape[0], G.shape[1]
 
     D_move = calc_movement_matrix(G)
-    start_grid_num = start[0] * cols + start[1]
-    end_grid_num = end[0] * cols + end[1]
+    start_grid_num = start[1] * cols + start[0]
+    end_grid_num = end[1] * cols + end[0]
     D = calc_distance_matrix(G=G, end_coord=end)
 
     Eta = calc_heuristic_factor(D)
@@ -131,12 +136,12 @@ def aco(G, start, end, m, NC_max, Alpha=2, Beta=6, Rho=0.1, Q=1, min_PL_NC_ant=f
 
                 # Calculate the probability to move to each reachable node
                 for i in range(len(next_nodes)):
-                    r, c = grid_number_to_xy(next_nodes[i], cols)  # Calculate the row and column of the reachable point
+                    r, c = grid_number_to_yx(next_nodes[i], cols)  # Calculate the row and column of the reachable point
                     p[i] = (Tau[r, c] ** Alpha) * (Eta[r, c] ** Beta) # Probability to move to each reachable node
                 
                 p /= np.sum(p)  # Normalize the probabilities
                 pcum = np.cumsum(p)  # Cumulative probabilities
-                select = np.where(pcum >= np.random.rand())[0]  # Roulette wheel selection for the next node
+                select = np.where(pcum >= random.random())[0]  # Roulette wheel selection for the next node
                 
                 to_visit = next_nodes[select[0]]  # Move to the selected next node
 
@@ -170,7 +175,7 @@ def aco(G, start, end, m, NC_max, Alpha=2, Beta=6, Rho=0.1, Q=1, min_PL_NC_ant=f
                 tiaoshu = len(rout) - 1  # Find the number of times ants reach the destination
                 value_PL = PL[NC, ant]  # Distance traveled by ants reaching the destination
                 for u in range(0, tiaoshu):
-                    r3, c3 = grid_number_to_xy(rout[u], cols)
+                    r3, c3 = grid_number_to_yx(rout[u], cols)
                     delta_Tau[r3, c3] += Q / value_PL  # Calculate the value of the pheromone variable
 
         Tau = (1 - Rho) * Tau + delta_Tau  # Update the pheromone

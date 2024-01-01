@@ -2,17 +2,19 @@ import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout, QPushButton, QFileDialog, QFormLayout, \
     QRadioButton, QSpinBox, QCheckBox, QLineEdit, QHBoxLayout, QGroupBox, QLCDNumber, QMessageBox
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
-from typing import Optional
 from obstacle.obstacle_map import Map
 from obstacle.random_map import generate_image
 from a_star.explorer import Explorer
 from a_star.search import astar_search, path_states, dynamic_weighted_astar_search
 from path_smooth.path_smooth import simplify_path
+from genetic.genetic import genetic
 import time
 from math import sqrt
+import random
+
+# Set a seed for reproducibility
+random.seed(42)
 
 class MatplotlibWidget(QWidget):
     def __init__(self):
@@ -90,7 +92,6 @@ class MainWindow(QWidget):
         layout.addRow(self.image_button, self.random_image_button)
         layout.addRow(self.image_label)
         
-        
         # Grid size
         self.grid_size_spinbox = QSpinBox()
         self.grid_size_spinbox.setValue(40)
@@ -141,14 +142,27 @@ class MainWindow(QWidget):
         self.astar_improved_smooth_radio.clicked.connect(self.selectProposedAstarPathSmooth)
         
         
-        
         # Genetic
-        self.genetic_radio = QRadioButton('Genetic Algorithm')
-        self.genetic_spinbox_label = QLabel('Generations:')
-        self.genetic_spinbox = QSpinBox()
-        layout.addRow(self.genetic_radio)
-        layout.addRow(self.genetic_spinbox_label, self.genetic_spinbox)
-        
+        layout.addRow(QLabel('<b>Genetic Algorithm</b>'))
+        self.genetic_generation_spinbox = QSpinBox()
+        self.genetic_generation_spinbox.setValue(100)
+        layout.addRow(QLabel('Generations:'), self.genetic_generation_spinbox)
+
+        self.genetic_init_pop_spinbox = QSpinBox()
+        self.genetic_init_pop_spinbox.setValue(20)
+        layout.addRow(QLabel('Number of ants:'),self.genetic_init_pop_spinbox)
+
+        self.genetic_crossover_prob = QLineEdit()
+        self.genetic_crossover_prob.setText('0.2')
+        layout.addRow(QLabel('Crossover probability:'), self.genetic_crossover_prob)
+
+        self.genetic_mutation_prob = QLineEdit()
+        self.genetic_mutation_prob.setText('0.05')
+        layout.addRow(QLabel('Mutation probability:'), self.genetic_mutation_prob)
+
+        self.genetic_btn = QPushButton('Run Genetic')
+        layout.addRow(self.genetic_btn)
+        self.genetic_btn.clicked.connect(self.runGenetic)
         
         # Add everything to the form group box
         layout.addRow(QLabel('<b>Execution details:</b>'))
@@ -201,11 +215,11 @@ class MainWindow(QWidget):
         goal = (int(self.end_x_edit.text()), int(self.end_y_edit.text()))
         map = self.map
         if map.is_obstacle_in_grid(initial[0], initial[1]):
-            QMessageBox.information(self, 'Start point lie in obstacle space!!\nPlease try again')
+            QMessageBox.information(self, 'Invalid', 'Start point lie in obstacle space!!\nPlease try again', QMessageBox.Ok)
             print('Start point lie in obstacle space!!\nPlease try again')
             return
         if map.is_obstacle_in_grid(goal[0], goal[1]):
-            QMessageBox.information(self, 'Goal lie in obstacle space!!\nPlease try again')
+            QMessageBox.information(self, 'Invalid', 'Goal lie in obstacle space!!\nPlease try again', QMessageBox.Ok)
             return
         
         explorer = Explorer(map=map, initial=initial, goal=goal)
@@ -282,7 +296,20 @@ class MainWindow(QWidget):
         path = path_states(node)
         simplified_path = simplify_path(path, map)
         self.matplotlib_widget.draw_path_found(simplified_path, initial, goal, explorer.get_reached())
+    
+    def runGenetic(self):
+        max_generation, initial_population_size = self.genetic_generation_spinbox.value(), self.genetic_init_pop_spinbox.value()
+        p_crossover, p_mutation = (float(self.genetic_crossover_prob.text()), float(self.genetic_mutation_prob.text()))
         
+        initial = (int(self.start_x_edit.text()), int(self.start_y_edit.text()))
+        goal = (int(self.end_x_edit.text()), int(self.end_y_edit.text()))
+        # G = self.map.get_grid_matrix()
+        # print(G)
+        path = genetic(self.map, start=initial, end=goal,
+                       max_generation=max_generation, initial_population_size=initial_population_size, 
+                       p_crossover=p_crossover, p_mutation=p_mutation)
+        print(path)
+        self.matplotlib_widget.draw_path_found(path, initial, goal, [])
 
 
 if __name__ == '__main__':

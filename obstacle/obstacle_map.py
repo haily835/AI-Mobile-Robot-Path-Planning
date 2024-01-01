@@ -28,6 +28,17 @@ class Map:
                 if self.is_obstacle_in_grid(x, y):
                     self.obstacles.append((x, y))
 
+    def get_grid_matrix(self):
+        G = np.zeros((self.y_lim, self.x_lim))
+        
+        for y in range(self.y_lim):
+            for x in range(self.x_lim):
+                if self.is_obstacle_in_grid(x, y):
+                    G[y][x] = 1
+                else:
+                    G[y][x] = 0
+        return G
+    
     def is_obstacle_in_grid(self, x, y):
         """
         Check whether a small grid at the specified row and column contains a black portion.
@@ -136,7 +147,8 @@ class Map:
             x, y = coords
             center_coords = (x * self.grid_size + 0.5 * self.grid_size, y * self.grid_size + 0.5 * self.grid_size)
             center_points.append(center_coords)
-        
+        for center_point in center_points:
+            ax.scatter(center_point[0], center_point[1], color='blue', s=23)
         # Connect the center points with lines
         for i in range(len(center_points) - 1):
             ax.plot([center_points[i][0], center_points[i + 1][0]],
@@ -159,4 +171,5 @@ class Map:
         self.draw_rect(ax, initial, edgecolor='green', facecolor='green')
         self.draw_rect(ax, goal, edgecolor='orange', facecolor='orange')
 
-        if not (fig or ax): plt.show()
+        if not (fig or ax): 
+            plt.show()

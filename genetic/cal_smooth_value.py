@@ -1,5 +1,5 @@
 import numpy as np
-from distance import distance
+
 
 def calculate_angle(A, B, C):
     AB = B - A
