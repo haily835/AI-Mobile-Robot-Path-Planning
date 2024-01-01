@@ -160,6 +160,3 @@ class Map:
         self.draw_rect(ax, goal, edgecolor='orange', facecolor='orange')
 
         if not (fig or ax): plt.show()
-
-
-    
