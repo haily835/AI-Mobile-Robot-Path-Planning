@@ -6,18 +6,18 @@
 
 ### Project structure and File Descriptions
 
-#### Grid / Map implementation is in **obstacle** folder.
+#### Grid / Map implementation
 - **obstacle/obstacle_map.py**: A Map class with function to convert the **gray scale** image file to a mesh grid. An image is divided into smaller cells of size "grid_size". A cell contain "grid_size" pixels in it. Cells that contains obstacle will be marked as red rectange. This class also contains functions to plot the path found by different algorithms.
 
 - **obstacle/random_map.py**: In case we want to generate random map with obstacles we can use this script to generate images. The images generated will be stored in **generated_images** folder.
 
 
-#### A Star algorithm is in **a_star** folder:
+#### A Star algorithm
 - **a_star/explorer.py**: Path finding as a search problem (Follow the provided code from An Introduction to AI text book)
 - **a_star/search.py**: Search algorithm, including traditional A star (with Euclidian/ Proposed heurisics) and the dynamic weighted a star. (Follow the suggestion in the paper https://ieeexplore.ieee.org/document/8397830). 
 
 
-#### Genetic algorithm implemenation is in **genetic** folder:
+#### Genetic algorithm implemenation
 - **genetic/grid_number_to_yx.py**: the grids are number from top left corner (left -> right, top -> bottom). The grid at the top left is numbered as 0. This file contains the functions to convert the grid number to the y,x coordinates. y = floor(position // number_of_columns), x = position mod number_of_columns
 - **genetic/aco.py**: Ant colony optimization algorithm to generate the initial population (Follow X.LDai, S Long,Z.W Zhang and D.  Gong, “Mobile Robot Path Planning Based on Ant Colony Algorithm With A* Heuristic Method” paper)
 - Note: The following implemenations are based on the paper Yibo Li ,Dingguang Dong ,Xiaonan Guo, "Mobile Robot Path Planning based on Improved Genetic Algorithm With A-star Heuristic Method" 
@@ -31,12 +31,12 @@
 - **genetic/distance.py**: calculate the Euclidean distance between 2 points (grid number).
 
 
-#### Path smoothing is in **path_smooth** folder:
+#### Path smoothing
 **path_smooth/path_smooth.py**: Connect consecutive grids to provide better path.
 
 
-#### Sample maps is in **generated_images** folder.
-- This folder contains the manually created images and auto generated images. Note that the U_shape maps, o1 => o4 are used to test for experiments.
+#### Sample maps
+-  **generated_images**: This folder contains the manually created images and auto generated images. Note that the U_shape maps, o1 => o4 are used to test for experiments.
 
 
 ### Notebooks
