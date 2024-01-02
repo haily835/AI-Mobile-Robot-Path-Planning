@@ -59,7 +59,7 @@ def deletion(population, map):
     #     obstacle_rectangles.append(rect_points)
     
     # return [delete_slow(individual, cols, obstacle_rectangles, grid_size) for individual in population]
-    with concurrent.futures.ThreadPoolExecutor(max_workers=len(population)) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=16) as executor:
         futures = [executor.submit(delete_nodes, individual, G) for individual in population]
         return [future.result() for future in concurrent.futures.as_completed(futures)]
     

@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import math
 from matplotlib.patches import Rectangle
+from matplotlib.lines import Line2D
 
 class Map:
     def __init__(self, image_path, grid_size):
@@ -132,6 +133,7 @@ class Map:
         """
         Visualize the coordinate system with labeled axes, mesh grid, obstacles, and arrows.
         """
+        
         if fig and ax:
             self.draw_grid(ax)
         else:
@@ -148,7 +150,7 @@ class Map:
             center_coords = (x * self.grid_size + 0.5 * self.grid_size, y * self.grid_size + 0.5 * self.grid_size)
             center_points.append(center_coords)
         for center_point in center_points:
-            ax.scatter(center_point[0], center_point[1], color='blue', s=23)
+            ax.scatter(center_point[0], center_point[1], color='blue', s=23, label='Path')
         # Connect the center points with lines
         for i in range(len(center_points) - 1):
             ax.plot([center_points[i][0], center_points[i + 1][0]],
@@ -170,6 +172,16 @@ class Map:
         self.plot_center_points(ax, states)
         self.draw_rect(ax, initial, edgecolor='green', facecolor='green')
         self.draw_rect(ax, goal, edgecolor='orange', facecolor='orange')
+
+        legend_elements = [
+            Line2D([0], [0], marker='o', color='w', markerfacecolor='gray', markersize=10, label='Reached Node'),
+            Line2D([0], [0], marker='o', color='w', markerfacecolor='green', markersize=10, label='Start'),
+            Line2D([0], [0], marker='o', color='w', markerfacecolor='blue', markersize=10, label='Path'),
+            Line2D([0], [0], marker='o', color='w', markerfacecolor='orange', markersize=10, label='Goal')
+        ]
+
+        # Add legend
+        ax.legend(handles=legend_elements, loc='upper right')
 
         if not (fig or ax): 
             plt.show()
