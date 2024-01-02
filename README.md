@@ -50,9 +50,9 @@
 ### Commands
 - **UI**: Contains options for the map (such as importing images or generating random images). User can choose the algorithm with configuration to find the path.
 
-```bash
-  python ui.py
-```
+  ```bash
+    python ui.py
+  ```
 
 - **Clone the Repository:**
   ```bash
