@@ -1,4 +1,4 @@
-# COMP 8400 AI Path Planning Problem - A Comparision of A star search and Genetic algorithm
+# COMP 8700 AI Path Planning Problem - A Comparision of A star search and Genetic algorithm
 
 ### Project descriptions: TODO
 
