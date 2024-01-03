@@ -5,7 +5,7 @@ import concurrent.futures
 # Set a seed for reproducibility
 random.seed(42)
 
-# check if the line connected pass through obstacle
+# check if the line connected pass through obstacle or not
 def check_path(a, b, G):
     a1, b1 = a
     a3, b3 = b

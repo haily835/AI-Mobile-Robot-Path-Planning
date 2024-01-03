@@ -3,6 +3,7 @@ import numpy as np
 import math
 from matplotlib.patches import Rectangle
 from matplotlib.lines import Line2D
+import random
 
 class Map:
     def __init__(self, image_path, grid_size):
@@ -142,7 +143,7 @@ class Map:
             plt.show()
         
 
-    def plot_center_points(self, ax, rectangle_coords_list):
+    def plot_center_points(self, ax, rectangle_coords_list, color='blue'):
         center_points = []
 
         for coords in rectangle_coords_list:
@@ -150,11 +151,11 @@ class Map:
             center_coords = (x * self.grid_size + 0.5 * self.grid_size, y * self.grid_size + 0.5 * self.grid_size)
             center_points.append(center_coords)
         for center_point in center_points:
-            ax.scatter(center_point[0], center_point[1], color='blue', s=23, label='Path')
+            ax.scatter(center_point[0], center_point[1], color=color, s=23, label='Path')
         # Connect the center points with lines
         for i in range(len(center_points) - 1):
             ax.plot([center_points[i][0], center_points[i + 1][0]],
-                    [center_points[i][1], center_points[i + 1][1]], color='blue', linestyle='-', linewidth=2)
+                    [center_points[i][1], center_points[i + 1][1]], color=color, linestyle='-', linewidth=1)
                 
                 
     def draw_path_found(self, states, initial, goal, reached = [], fig=None, ax=None):
@@ -185,3 +186,33 @@ class Map:
 
         if not (fig or ax): 
             plt.show()
+
+    def draw_multiple_path_found(self, paths, initial, goal, reached = [], fig=None, ax=None):
+        """
+        Visualize the coordinate system with labeled axes, mesh grid, obstacles, and arrows.
+        """
+        if not (fig or ax):
+            fig, ax = plt.subplots()
+            self.draw_grid(ax)
+        
+        # Draw reached states
+        for r in reached:
+            self.draw_rect(ax, r, edgecolor='#D9D9D9', facecolor='#D9D9D9')
+        
+        legend_elements = []
+
+        for path in paths:
+            nodes, color, label = path
+            self.plot_center_points(ax, nodes, color)
+            
+            legend = Line2D([0], [0], marker='o', color='w', markerfacecolor=color, markersize=10, label=label)
+            legend_elements.append(legend)
+        
+        self.draw_rect(ax, initial, edgecolor='green', facecolor='green')
+        self.draw_rect(ax, goal, edgecolor='orange', facecolor='orange')
+
+        legend_elements.append(Line2D([0], [0], marker='o', color='w', markerfacecolor='green', markersize=10, label='Start'))
+        legend_elements.append(Line2D([0], [0], marker='o', color='w', markerfacecolor='orange', markersize=10, label='Goal'))
+        
+        # Add legend
+        ax.legend(handles=legend_elements, loc='upper right')

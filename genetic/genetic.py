@@ -1,5 +1,5 @@
 import numpy as np
-from .selection import selection
+from .selection import selection, truncation_selection
 from .crossover import crossover
 from .deletion import deletion
 from .cal_path_value import cal_path_value
@@ -13,7 +13,6 @@ import random
 
 # Set a seed for reproducibility
 random.seed(42)
-
 
 
 def convert_path_to_xy(path, cols):
@@ -33,34 +32,35 @@ def plot_path(G, path_coordinates):
 
 
 def genetic(map, start, end, max_generation = 100, initial_population_size=50, p_crossover = 0.2, 
-            p_mutation = 0.05, weight_length = 20, weight_smooth = 20, verbose=False):
+            p_mutation = 0.05, weight_length = 20, weight_smooth = 100, verbose=False):
     
     G = map.get_grid_matrix()
     rows, cols = G.shape[0], G.shape[1]
 
-    new_population = aco(G, start, end, m=initial_population_size, NC_max=10)
+    new_population = aco(G, start, end, m=initial_population_size, NC_max=1000)
 
     print("Finish Ant colony optimization, size of initial population: ", len(new_population))
 
     path_value = cal_path_value(new_population, cols)
-    sort1, index = np.sort(path_value), np.argsort(path_value)
-    new_population = [new_population[i] for i in index]
-    # print('new_population: ', new_population)
     path_value = cal_path_value(new_population, cols)
     smooth_value = cal_smooth_value(new_population, cols)
-    fit_value = (weight_length / path_value) + (weight_smooth / smooth_value)
+    fit_value = - (weight_length * path_value) - (weight_smooth * smooth_value)
 
-    mean_path_value = np.zeros(max_generation)
-    min_path_value = np.zeros(max_generation)
-    min_path = []
+    mean_path_value = []
+    mean_fit_value = []
+    mean_smooth_value = []
+    best_path = []
 
     for i in range(max_generation):
-        if verbose: print(f'------------Generation {i + 1} -----------------')
-
+        print(f'------------Generation {i + 1} -----------------')
+        print('Population size: ', len(new_population))
         if verbose: print(f'Before selection, population size: ', len(new_population))
-        new_population = selection(new_population, fit_value)
+        new_population = truncation_selection(new_population, fit_value, 0.99)
         if verbose: print(f'After selection, population size: ', len(new_population))
 
+        if (len(new_population) < 2): 
+            print('The population is now contain lest than 2 parent. Stop genetic')
+            break
         if verbose: print(f'Before crossover, two first parents: \n{new_population[0]}\n{new_population[1]}')
         new_population = crossover(new_population, p_crossover)
         if verbose: print(f'After crossover, two first parents: \n{new_population[0]}\n{new_population[1]}')
@@ -81,23 +81,26 @@ def genetic(map, start, end, max_generation = 100, initial_population_size=50, p
 
         smooth_value = cal_smooth_value(new_population, cols)
 
-        # fit_value = []
-        # for i in range(len(path_value)):
-        #     fit_value.append(
-        #         weight_length / (path_value or np.Inf) + (weight_smooth / smooth_value)
-        #     )
-        
-        fit_value = 10 ** cols - (weight_length * path_value) - (weight_smooth * path_value)
+        fit_value = - (weight_length * path_value) - (weight_smooth * smooth_value)
 
-        mean_path_value[i] = np.mean(path_value)
+        mean_path_value.append(np.mean(path_value))
+        mean_smooth_value.append(np.mean(smooth_value))
+        mean_fit_value.append(np.mean(fit_value))
         ma = np.argmax(fit_value)
-        min_path_value[i] = path_value[ma]
-        min_path.append(new_population[ma])
+        best_path.append(new_population[ma])
+
+
+        print('Mean fit_value: ', np.mean(fit_value))
+        print('Mean path_value: ', np.mean(path_value)) 
+        print('Mean smooth_value: ', np.mean(smooth_value))
+        print('Best path: ', new_population[ma])
+        
     
-    print("Path grid numbers: ", min_path[-1])
-    path_xy = convert_path_to_xy(min_path[-1], cols)
+    print("Path grid numbers: ", best_path[-1])
+    path_xy = convert_path_to_xy(best_path[-1], cols)
     print("Path grid coordinates: ", path_xy)
-    return path_xy
+    return mean_path_value, mean_smooth_value, mean_fit_value, best_path
+    
 
 if __name__ == '__main__':
     G = np.array([

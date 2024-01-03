@@ -24,10 +24,10 @@ def crossover(new_population, p_crossover):
         # Perform crossover with a certain probability
         # len(commons) > 2 Every path has the same start and end so must have at least 3 points in common
         
-        if random.random() < p_crossover and len(commons) > 3:
+        if random.random() < p_crossover and len(commons) > 2:
             # Select a random crossover point (exclude the first and last)
             crossover_point_in_parent_1 = random.choice(commons[1:-1])   
-            crossover_point_in_parent_2 = parent_2.tolist().index(parent_1[crossover_point_in_parent_1])
+            crossover_point_in_parent_2 = np.where(parent_2 == parent_1[crossover_point_in_parent_1])[0][0]
 
             # swapping genetic material
             new_population_1.append(list(parent_1[:crossover_point_in_parent_1 + 1]) + list(parent_2[crossover_point_in_parent_2+1:]))

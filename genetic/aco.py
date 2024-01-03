@@ -4,22 +4,11 @@ import numpy as np
 from .grid_number_to_yx import grid_number_to_yx
 import random
 import numpy as np
+import concurrent.futures
 
 # Set a seed for reproducibility
 random.seed(42)
 
-G = np.array([
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [1, 1, 1, 1, 1, 1, 1, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-])
 
 def calc_distance_matrix(G, end_coord):
     # Initialize the distance matrix D
@@ -40,13 +29,6 @@ def calc_distance_matrix(G, end_coord):
     return D
     
 def calc_heuristic_factor(D):
-    """
-    Parameters:
-        - D is the distance matrix
-
-    Return: 
-        - The heuristic factor (Eta) as the reciprocal of the distance to the destination
-    """
     # Calculate the heuristic factor (Eta) as the reciprocal of the distance to the destination
     Eta = 1 / D
     return Eta
@@ -84,26 +66,7 @@ def calc_movement_matrix(G):
     return D_move
 
 
-# Checkpoint: Movement matrix and adjacency matrix calculations completed without errors
-# Start iteration
-# number of ants = 2, NC_max = 10 => each elements in the route array have 2 paths
 
-# m = 50  # m is the number of ants
-# NC_max = 5  # maximum number of iterations
-# Alpha = 2  # Alpha is the parameter representing the importance of pheromones
-# Beta = 6  # Beta is the parameter representing the importance of the heuristic factor
-# Rho = 0.1  # Rho is the pheromone evaporation coefficient
-# Q = 1  # pheromone strength coefficient
-# Tau = np.ones((n, n))  # Tau is the pheromone matrix
-# NC = 0  # current iteration counter
-# s = 0  # starting point coordinates in the matrix
-# position_e = 99  # destination coordinates in the matrix
-# r_e, c_e = grid_number_to_xy(position_e, n)
-
-
-# min_PL_NC_ant = float('inf')  # minimum path length among ants
-# min_ant = 0  # ant index with the minimum path
-# min_NC = 0  # iteration index with the minimum path
 def aco(G, start, end, m, NC_max, Alpha=2, Beta=6, Rho=0.1, Q=1, min_PL_NC_ant=float('inf')):
     rows, cols = G.shape[0], G.shape[1]
 
@@ -118,6 +81,8 @@ def aco(G, start, end, m, NC_max, Alpha=2, Beta=6, Rho=0.1, Q=1, min_PL_NC_ant=f
     routes = [[] for _ in range(NC_max)]  # Store the path of each ant for each iteration
     PL = np.zeros((NC_max, m))  # Store the path lengths of each ant for each iteration
     NC = 1
+
+
     while NC < NC_max:
         for ant in range(m):
             current_position = start_grid_num  # Current position is the starting point
@@ -169,7 +134,7 @@ def aco(G, start, end, m, NC_max, Alpha=2, Beta=6, Rho=0.1, Q=1, min_PL_NC_ant=f
 
         delta_Tau = np.zeros((rows, cols))  # Initialize the pheromone variable
 
-        for j3 in range(m):
+        for ant in range(m):
             if PL[NC, ant]:
                 rout = routes[NC][ant]
                 tiaoshu = len(rout) - 1  # Find the number of times ants reach the destination
@@ -211,3 +176,4 @@ if __name__ == '__main__':
     print(aco(
         G, start=[0,0], end=[9,9], m=5, NC_max=3
     ))
+

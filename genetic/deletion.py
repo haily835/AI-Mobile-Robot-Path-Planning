@@ -15,7 +15,7 @@ def delete_nodes(path, G):
     rows, cols = G.shape[0], G.shape[1]
     long = len(path)
     j = 0
-
+    
     while j != long - 2:
         # Get coordinates for the current and next grid points
         a1, b1 = grid_number_to_yx(path[j], cols)
@@ -27,7 +27,7 @@ def delete_nodes(path, G):
         elif a1 >= a3 and b1 <= b3 and np.all(G[a3:a1+1, b1:b3+1] == 0): skip = True
         elif a1 >= a3 and b1 >= b3 and np.all(G[a3:a1+1, b3:b1+1] == 0): skip = True
         
-        if skip: path = np.delete(path, j + 1)
+        if skip: path = np.delete(path, j + 1).tolist()
         else: j += 1
         
         long = len(path)

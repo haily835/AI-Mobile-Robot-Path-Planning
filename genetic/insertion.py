@@ -23,10 +23,10 @@ def insert_path(path, G):
     while i < (len(path) - 1):
         p1 = grid_number_to_yx(path[i], cols)
         p2 = grid_number_to_yx(path[i + 1], cols)
-        delta = max(abs(p2[0] - p1[0]), abs(p2[1] - p1[1]))
-
+        delta = min(abs(p2[0] - p1[0]), abs(p2[1] - p1[1]))
+        # print(f'delta {i} ', delta)
         # Delta = 1 => discontinuos
-        if delta != 1:
+        if delta > 1:
             p_alt = ((p2[0] + p1[0]) // 2, (p2[1] + p1[1]) // 2)
             
             if G[p_alt[0], p_alt[1]] == 0 \
@@ -53,6 +53,7 @@ def insert_path(path, G):
                         alternatives.append(end)
 
                 if len(alternatives):
+                    # print('insert')
                     alt = random.choice(alternatives)
                     path = path[:i+1] + [alt[0] * cols + alt[1]] + path[i+1:]
                     i += 2

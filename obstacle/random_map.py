@@ -5,7 +5,7 @@ import matplotlib.image as mpimg
 import numpy as np
 import os
 
-def generate_image(width=300, height=300, num_shapes=random.randint(5, 10)):
+def generate_image(width=400, height=400, num_shapes=random.randint(5, 10)):
     # Create a white image
     img = Image.new("L", (width, height), 255)
     draw = ImageDraw.Draw(img)
@@ -58,5 +58,5 @@ def generate_image(width=300, height=300, num_shapes=random.randint(5, 10)):
     
 
 if __name__ == "__main__":
-    generated_image = generate_image()
+    generated_image = generate_image(width=1000, height=1000, num_shapes=40)
 
