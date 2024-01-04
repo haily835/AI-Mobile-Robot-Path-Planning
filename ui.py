@@ -306,7 +306,7 @@ class MainWindow(QWidget):
         # G = self.map.get_grid_matrix()
         # print(G)
         path = genetic(self.map, start=initial, end=goal,
-                       max_generation=max_generation, initial_population_size=initial_population_size, 
+                       max_generation=max_generation, ant_number=initial_population_size, 
                        p_crossover=p_crossover, p_mutation=p_mutation)
         print(path)
         self.matplotlib_widget.draw_path_found(path, initial, goal, [])

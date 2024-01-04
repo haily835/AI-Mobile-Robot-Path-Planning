@@ -36,6 +36,6 @@ def cal_bend(path):
         
         angle = calculate_angle(np.array(a), np.array(b), np.array(c))
         
-        if angle < 175:
+        if angle < 179:
             bend += 1
     return bend
