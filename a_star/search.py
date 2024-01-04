@@ -39,6 +39,9 @@ class Node:
     def __len__(self): return 0 if self.parent is None else (1 + len(self.parent))
     def __lt__(self, other): return self.path_cost < other.path_cost
     
+    @property
+    def depth(self):
+        return 1 + self.parent.depth if self.parent is not None else 0
     
 failure = Node('failure', path_cost=math.inf) # Indicates an algorithm couldn't find a solution.
 cutoff  = Node('cutoff',  path_cost=math.inf) # Indicates iterative deepening search was cut off.
@@ -94,7 +97,6 @@ class PriorityQueue:
 
 
 def best_first_search(problem: Problem, f):
-
     "Search nodes with minimum f(node) value first."
     node = Node(problem.initial)
     frontier = PriorityQueue([node], key=f)
@@ -132,3 +134,26 @@ def dynamic_weighted_astar_search(problem, h=None):
         return g(n) + 1000 * alpha * h(n)
     
     return best_first_search(problem, f=f)
+
+def gready_search(problem: Problem, f, limit):
+    "Search nodes with minimum f(node) value first."
+    node = Node(problem.initial)
+    frontier = PriorityQueue([node], key=f)
+    
+    paths = []
+    while frontier:
+        node = frontier.pop()
+
+        prev_states = [f"{s[0]},{s[1]}" for s in path_states(node)]
+        if problem.is_goal(node.state):
+            paths.append(path_states(node))
+            if len(paths) > limit - 1:
+                return paths
+    
+        for child in expand(problem, node):
+            s = f"{child.state[0]},{child.state[1]}"
+            if not s in prev_states:
+                frontier.add(child)
+            
+    return paths
+

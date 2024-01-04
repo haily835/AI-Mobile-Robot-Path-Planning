@@ -10,10 +10,11 @@ import matplotlib.pyplot as plt
 from .insertion import insertion
 from .aco import aco
 import random
-
+from a_star.explorer import Explorer
+from a_star.search import gready_search
 # Set a seed for reproducibility
 random.seed(42)
-
+from math import sqrt
 
 def convert_path_to_xy(path, cols):
     return [(grid_number_to_yx(grid, cols)[1], grid_number_to_yx(grid, cols)[0])  for grid in path]
@@ -31,13 +32,13 @@ def plot_path(G, path_coordinates):
     plt.show()
 
 
-def genetic(map, start, end, max_generation = 100, initial_population_size=50, p_crossover = 0.2, 
+def genetic(map, start, end, max_generation = 100, i=50, p_crossover = 0.2, ant_number=10,
             p_mutation = 0.05, weight_length = 20, weight_smooth = 100, verbose=False):
     
     G = map.get_grid_matrix()
     rows, cols = G.shape[0], G.shape[1]
 
-    new_population = aco(G, start, end, m=initial_population_size, NC_max=1000)
+    new_population = aco(G, start, end, m=ant_number, NC_max=1000)
 
     print("Finish Ant colony optimization, size of initial population: ", len(new_population))
 

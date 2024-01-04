@@ -35,7 +35,7 @@ def calc_heuristic_factor(D):
 
 def calc_pheromone(Eta):
     # Initialize the pheromone matrix (Tau) with a multiplier for innovation
-    Tau = 10 * Eta  # Innovative point
+    Tau = 10 * Eta
     return Tau
 
 

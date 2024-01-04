@@ -1,7 +1,7 @@
 import numpy as np
 from .grid_number_to_yx import grid_number_to_yx
 import concurrent.futures
-from path_smooth.path_smooth import delete_nodes
+
 from matplotlib.patches import Rectangle
 
 def convert_path_to_xy(path, cols):

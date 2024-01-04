@@ -12,7 +12,7 @@ def generate_image(width=400, height=400, num_shapes=random.randint(5, 10)):
 
     for _ in range(num_shapes):
         # Randomly choose a shape (circle, rectangle, or polygon)
-        shape_type = random.choice(["circle", "rectangle"])
+        shape_type = random.choice([ "rectangle"])
 
         if shape_type == "circle":
             # Generate a random circle
@@ -23,7 +23,7 @@ def generate_image(width=400, height=400, num_shapes=random.randint(5, 10)):
 
         elif shape_type == "rectangle":
             # Generate a random rectangle
-            size = (random.randint(10, 50), random.randint(10, 50))
+            size = (random.randint(10, width / 10), random.randint(10, height / 10))
             top_left = (random.randint(0, width - size[0]), random.randint(0, height - size[1]))
             bottom_right = (top_left[0] + size[0], top_left[1] + size[1])
             draw.rectangle([top_left, bottom_right], fill=0)
@@ -58,5 +58,5 @@ def generate_image(width=400, height=400, num_shapes=random.randint(5, 10)):
     
 
 if __name__ == "__main__":
-    generated_image = generate_image(width=1000, height=1000, num_shapes=40)
+    generated_image = generate_image(width=1000, height=1000, num_shapes=50)
 

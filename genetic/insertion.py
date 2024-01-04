@@ -23,7 +23,7 @@ def insert_path(path, G):
     while i < (len(path) - 1):
         p1 = grid_number_to_yx(path[i], cols)
         p2 = grid_number_to_yx(path[i + 1], cols)
-        delta = min(abs(p2[0] - p1[0]), abs(p2[1] - p1[1]))
+        delta = max(abs(p2[0] - p1[0]), abs(p2[1] - p1[1]))
         # print(f'delta {i} ', delta)
         # Delta = 1 => discontinuos
         if delta > 1:

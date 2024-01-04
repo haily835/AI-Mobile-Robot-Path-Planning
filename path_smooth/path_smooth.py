@@ -32,31 +32,6 @@ def find_next_turn(path_center_points, obstacle_rectangles, start_index, verbose
             i += 1
     return i
 
-def delete_nodes(path, obstacle_rectangles, grid_size):
-    simplified_path = [path[0]]  # Start with the initial node
-    
-    path_center_points = []
-    for coords in path:
-        x, y = coords
-        center_coords = (x * grid_size + 0.5 * grid_size, y * grid_size + 0.5 * grid_size)
-        path_center_points.append(center_coords)
-    
-
-    i = 0
-    while i < len(path_center_points) - 2:
-        next_turn_index = find_next_turn(path_center_points, obstacle_rectangles, i)
-        
-        if (next_turn_index - i) >= 1: # Some nodes are skipped
-            simplified_path.append(path[next_turn_index])
-            i = next_turn_index
-        else:
-            i += 1
-
-    # Add the target node
-    simplified_path.append(path[-1])
-
-    return simplified_path
-
 def simplify_path(path, map: Map):
     simplified_path = [path[0]]  # Start with the initial node
     obstacles = map.obstacles
