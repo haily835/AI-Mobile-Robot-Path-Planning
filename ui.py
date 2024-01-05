@@ -12,6 +12,7 @@ from genetic.genetic import genetic
 import time
 from math import sqrt
 import random
+from genetic.genetic import convert_path_to_xy
 
 # Set a seed for reproducibility
 random.seed(42)
@@ -145,11 +146,11 @@ class MainWindow(QWidget):
         # Genetic
         layout.addRow(QLabel('<b>Genetic Algorithm</b>'))
         self.genetic_generation_spinbox = QSpinBox()
-        self.genetic_generation_spinbox.setValue(100)
+        self.genetic_generation_spinbox.setValue(5)
         layout.addRow(QLabel('Generations:'), self.genetic_generation_spinbox)
 
         self.genetic_init_pop_spinbox = QSpinBox()
-        self.genetic_init_pop_spinbox.setValue(20)
+        self.genetic_init_pop_spinbox.setValue(10)
         layout.addRow(QLabel('Number of ants:'),self.genetic_init_pop_spinbox)
 
         self.genetic_crossover_prob = QLineEdit()
@@ -303,13 +304,16 @@ class MainWindow(QWidget):
         
         initial = (int(self.start_x_edit.text()), int(self.start_y_edit.text()))
         goal = (int(self.end_x_edit.text()), int(self.end_y_edit.text()))
-        # G = self.map.get_grid_matrix()
-        # print(G)
-        path = genetic(self.map, start=initial, end=goal,
+        start_time = time.time()
+        mean_path_value, mean_smooth_value, mean_fit_value, best_path = genetic(self.map, start=initial, end=goal,
                        max_generation=max_generation, ant_number=initial_population_size, 
                        p_crossover=p_crossover, p_mutation=p_mutation)
-        print(path)
-        self.matplotlib_widget.draw_path_found(path, initial, goal, [])
+        end_time = time.time()
+        G = self.map.get_grid_matrix()
+        cols = G.shape[1]
+        
+        self.execution.setText(f"Genetic algorithm\nElapsed Time: {round(end_time - start_time, 5)} seconds")
+        self.matplotlib_widget.draw_path_found(convert_path_to_xy(best_path[-1], cols), initial, goal, [])
 
 
 if __name__ == '__main__':
