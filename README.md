@@ -1,6 +1,9 @@
-# COMP 8700 AI Path Planning Problem - A Comparision of A star search and Genetic algorithm
+# AI Path Planning Problem - A Comparision of A star search and Genetic algorithm
 
-### Project descriptions: TODO
+### Project descriptions:
+The report of the project can be found here
+https://www.overleaf.com/project/6597318ab7308c7fecfecce3
+
 
 
 
